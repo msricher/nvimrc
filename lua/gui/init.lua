@@ -44,9 +44,9 @@ end
 
 -- Setup function
 gui.setup = function()
-    --
-    -- Import utils module
-    local utils = require('utils')
+
+    -- Import nvim module
+    local nvim = require('nvim')
 
     -- Disable GUI popupmenu widget
     if vim.fn.exists(':GuiPopupmenu') then
@@ -64,12 +64,12 @@ gui.setup = function()
     end
 
     -- Resize font keymaps
-    utils.keymap('', '<C-+>', '<Cmd>IncreaseFontSize<Cr>', {noremap = true})
-    utils.keymap('', '<C-=>', '<Cmd>ResetFontSize<Cr>', {noremap = true})
-    utils.keymap('', '<C-->', '<Cmd>DecreaseFontSize<Cr>', {noremap = true})
-    utils.keymap('i', '<C-+>', '<Cmd>IncreaseFontSize<Cr>', {noremap = true})
-    utils.keymap('i', '<C-=>', '<Cmd>ResetFontSize<Cr>', {noremap = true})
-    utils.keymap('i', '<C-->', '<Cmd>DecreaseFontSize<Cr>', {noremap = true})
+    nvim.keymap('', '<C-+>', '<Cmd>IncreaseFontSize<Cr>', {noremap = true})
+    nvim.keymap('', '<C-=>', '<Cmd>ResetFontSize<Cr>', {noremap = true})
+    nvim.keymap('', '<C-->', '<Cmd>DecreaseFontSize<Cr>', {noremap = true})
+    nvim.keymap('i', '<C-+>', '<Cmd>IncreaseFontSize<Cr>', {noremap = true})
+    nvim.keymap('i', '<C-=>', '<Cmd>ResetFontSize<Cr>', {noremap = true})
+    nvim.keymap('i', '<C-->', '<Cmd>DecreaseFontSize<Cr>', {noremap = true})
 
     -- Resize font commands
     vim.cmd [[command! IncreaseFontSize lua require('gui').increase_font_size()]]
@@ -78,6 +78,7 @@ gui.setup = function()
 
     -- Update font size
     update_font()
+
 end
 
 

@@ -1,28 +1,40 @@
 -- Define module
-local config = {}
+local nvim = {}
+
+
+-- Keymap function
+nvim.keymap = function(mode, key, cmd, opts)
+    vim.api.nvim_set_keymap(mode, key, cmd, opts)
+end
+
+
+-- Buffer keymap function
+nvim.buf_keymap = function(bufnr, mode, key, cmd, opts)
+    vim.api.nvim_buf_set_keymap(bufnr, mode, key, cmd, opts)
+end
+
+
+-- Buffer set option function
+nvim.buf_set_option = function(bufnr, ...)
+    vim.api.nvim_buf_set_option(bufnr, ...)
+end
 
 
 -- Setup function
-config.setup = function()
-    --
-    -- Import utils module
-    local utils = require('utils')
+nvim.setup = function()
 
-    -- Nvim version number
-    vim.g.nvim_version = vim.fn.matchstr(vim.fn.execute('version'), [[NVIM v\zs[^\n]*]])
+    -- Enable vim features
+    vim.cmd [[syntax on]]
+    vim.cmd [[filetype plugin indent on]]
 
     -- Disable netrw
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
 
-    -- Enable Vim features
-    vim.cmd [[syntax on]]
-    vim.cmd [[filetype plugin indent on]]
-
     -- Configure Vim
     vim.opt.background = 'dark'
     vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
-    vim.opt.cursorline = true
+    vim.opt.cursorline = false
     vim.opt.encoding = 'utf-8'
     vim.opt.expandtab = true
     vim.opt.fileencoding = 'utf-8'
@@ -43,6 +55,7 @@ config.setup = function()
     vim.opt.shortmess = 'aoOtTIcF'
     vim.opt.showmatch = true
     vim.opt.showmode = false
+    vim.opt.showtabline = 1
     vim.opt.signcolumn = 'number'
     vim.opt.smartcase = true
     vim.opt.smarttab = true
@@ -70,25 +83,26 @@ config.setup = function()
     vim.cmd [[autocmd FileType make setlocal noexpandtab]]
 
     -- Window keymaps
-    utils.keymap('', '<C-h>', '<Cmd>wincmd h<Cr>', {noremap = true})
-    utils.keymap('', '<C-j>', '<Cmd>wincmd j<Cr>', {noremap = true})
-    utils.keymap('', '<C-k>', '<Cmd>wincmd k<Cr>', {noremap = true})
-    utils.keymap('', '<C-l>', '<Cmd>wincmd l<Cr>', {noremap = true})
+    nvim.keymap('', '<C-h>', '<Cmd>wincmd h<Cr>', {noremap = true})
+    nvim.keymap('', '<C-j>', '<Cmd>wincmd j<Cr>', {noremap = true})
+    nvim.keymap('', '<C-k>', '<Cmd>wincmd k<Cr>', {noremap = true})
+    nvim.keymap('', '<C-l>', '<Cmd>wincmd l<Cr>', {noremap = true})
 
     -- Leader keymaps
-    utils.keymap('', '<Space>', '<Nop>', {noremap = true})
-    utils.keymap('', '<Space>', '<leader>', {})
-    utils.keymap('', '<leader>c', '"+', {noremap = true})
-    utils.keymap('', '<leader>C', '"*', {noremap = true})
-    utils.keymap('', '<leader>nn', '<Cmd>set number!<Cr>', {noremap = true})
-    utils.keymap('', '<leader>nr', '<Cmd>set relativenumber!<Cr>', {noremap = true})
-    utils.keymap('', '<leader>t', '<Cmd>terminal<Cr>', {noremap = true})
-    utils.keymap('', '<leader>wl', '<Cmd>set list!<Cr>', {noremap = true})
-    utils.keymap('', '<leader>ww', '<Cmd>%s/\\s\\+$//ge<Cr>', {noremap = true})
-    utils.keymap('', '<leader>qq', '<Cmd>quit!<Cr>', {noremap = true})
-    utils.keymap('', '<leader>QQ', '<Cmd>quitall!<Cr>', {noremap = true})
+    nvim.keymap('', '<Space>', '<Nop>', {noremap = true})
+    nvim.keymap('', '<Space>', '<leader>', {})
+    nvim.keymap('', '<leader>c', '"+', {noremap = true})
+    nvim.keymap('', '<leader>C', '"*', {noremap = true})
+    nvim.keymap('', '<leader>nn', '<Cmd>set number!<Cr>', {noremap = true})
+    nvim.keymap('', '<leader>nr', '<Cmd>set relativenumber!<Cr>', {noremap = true})
+    nvim.keymap('', '<leader>t', '<Cmd>terminal<Cr>', {noremap = true})
+    nvim.keymap('', '<leader>wl', '<Cmd>set list!<Cr>', {noremap = true})
+    nvim.keymap('', '<leader>ww', '<Cmd>%s/\\s\\+$//ge<Cr>', {noremap = true})
+    nvim.keymap('', '<leader>qq', '<Cmd>quit!<Cr>', {noremap = true})
+    nvim.keymap('', '<leader>QQ', '<Cmd>quitall!<Cr>', {noremap = true})
+
 end
 
 
 -- Return module
-return config
+return nvim

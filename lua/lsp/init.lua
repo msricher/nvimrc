@@ -1,15 +1,71 @@
 -- Define module
-lsp_installer_module = {}
+local lsp = {}
+
+
+-- LSP servers to install
+lsp.servers = {
+    'bashls',
+    'clangd',
+    'css',
+    'fortls',
+    'html',
+    'jsonls',
+    'pyright',
+    'sumneko_lua',
+    'texlab',
+    'vimls',
+    'yamlls',
+}
+
+
+-- Table for providing LSP server -specific options
+lsp.enhance_server_opts = {
+
+    ['css'] = function(opts)
+        opts.capabilities.textDocument.completion.completionItem.snippetSupport = true
+    end,
+
+    ['html'] = function(opts)
+        opts.capabilities.textDocument.completion.completionItem.snippetSupport = true
+    end,
+
+    ['json'] = function(opts)
+        opts.capabilities.textDocument.completion.completionItem.snippetSupport = true
+        opts.commands = {
+            Format = {
+                function()
+                    vim.lsp.buf.range_formatting({}, {0, 0}, {vim.fn.line('$'), 0})
+                end,
+            },
+        }
+    end,
+
+    ['sumneko_lua'] = function(opts)
+        opts.settings = {
+            Lua = {
+                diagnostics = {
+                    globals = {
+                        'vim',
+                    },
+                    disable = {
+                        'lowercase-global',
+                    },
+                },
+            },
+        }
+    end,
+
+}
 
 
 -- Setup function
-lsp_installer_module.setup = function()
-    --
-    -- Import LSP installer modules
+local setup = function()
+
+    -- Import LSP installer module
     local lsp_installer = require('nvim-lsp-installer')
 
-    -- Import user config from `plugins`
-    local plugins = require('plugins')
+    -- Import LSP module
+    local lsp = require('lsp')
 
     -- LSP client capabilities
     local capabilities = require('cmp_nvim_lsp').update_capabilities(
@@ -18,16 +74,16 @@ lsp_installer_module.setup = function()
 
     -- Function to run on attaching to an LSP server
     local on_attach = function(client, bufnr)
-        --
-        -- Import utils module
-        local utils = require('utils')
+
+        -- Import nvim module
+        local nvim = require('nvim')
 
         -- Omnifunc
-        utils.buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+        nvim.buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
         -- Keymaps
         local buf_keymap = function(mode, key, cmd)
-            utils.buf_keymap(bufnr, mode, key, cmd, {noremap = true, silent = true})
+            nvim.buf_keymap(bufnr, mode, key, cmd, {noremap = true, silent = true})
         end
         buf_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<Cr>')
         buf_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<Cr>')
@@ -71,15 +127,15 @@ lsp_installer_module.setup = function()
             on_attach = on_attach,
         }
         -- Supply option enhancements
-        if plugins.enhance_server_opts[server.name] then
-            plugins.enhance_server_opts[server.name](opts)
+        if lsp.enhance_server_opts[server.name] then
+            lsp.enhance_server_opts[server.name](opts)
         end
         -- Setup server
         server:setup(opts)
     end)
 
-    -- Ensure LSP servers from `plugins.config` are installed
-    for _, name in pairs(plugins.servers) do
+    -- Ensure LSP servers are installed
+    for _, name in pairs(lsp.servers) do
         local server_is_found, server = lsp_installer.get_server(name)
         if server_is_found then
             if not server:is_installed() then
@@ -88,8 +144,21 @@ lsp_installer_module.setup = function()
             end
         end
     end
+
 end
 
 
+-- Define plugin
+lsp.plugin = {
+    vim.fn.stdpath('config') .. '/lua/' .. 'lsp',
+    requires = {
+        -- LSP
+        {'williamboman/nvim-lsp-installer', requires = 'neovim/nvim-lspconfig'},
+    },
+    after = 'comp',
+    config = setup,
+}
+
+
 -- Return module
-return lsp_installer_module
+return lsp

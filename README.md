@@ -54,7 +54,7 @@ will install asynchronously in the background and may take several minutes each 
 ### Configuring `user.nvim`
 
 `user.nvim` can be configured by editing the `init.lua` file of each submodule. For example, to
-modify the table of installed plugins, modify `lua/plugins/init.lua`:
+modify the user interface, edit `lua/ui/init.lua`:
 ```sh
-nvim lua/plugins/init.lua
+nvim lua/ui/init.lua
 ```

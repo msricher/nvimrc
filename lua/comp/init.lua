@@ -1,14 +1,14 @@
 -- Define module
-cmp_module = {}
+local comp = {}
 
 
 -- Setup function
-cmp_module.setup = function()
-    --
-    -- Import cmp
+local setup = function()
+
+    -- Import cmp module
     local cmp = require('cmp')
 
-    -- Define mappings
+    -- Define cmp mappings
     local mapping = {
         ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), {'i', 'c'}),
         ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), {'i', 'c'}),
@@ -53,8 +53,28 @@ cmp_module.setup = function()
             {name = 'cmdline', group_index = 2},
         },
     })
+
 end
 
 
+-- Define plugin
+comp.plugin = {
+    vim.fn.stdpath('config') .. '/lua/' .. 'comp',
+    requires = {
+        -- Snippets
+        'L3MON4D3/LuaSnip',
+        'rafamadriz/friendly-snippets',
+        -- Completion
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-cmdline',
+        'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-path',
+        'saadparwaiz1/cmp_luasnip',
+        'hrsh7th/nvim-cmp',
+    },
+    config = setup,
+}
+
+
 -- Return module
-return cmp_module
+return comp

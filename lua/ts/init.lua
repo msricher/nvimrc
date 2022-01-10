@@ -1,10 +1,10 @@
 -- Define module
-treesitter = {}
+local ts = {}
 
 
 -- Setup function
-treesitter.setup = function()
-    --
+local setup = function()
+
     -- Import treesitter configs
     local tsconfig = require('nvim-treesitter.configs')
 
@@ -18,7 +18,6 @@ treesitter.setup = function()
         },
         maintainers = {'@nvim-neorg'},
     }
-
     parser_configs.norg_meta = {
         install_info = {
             url = 'https://github.com/nvim-neorg/tree-sitter-norg-meta',
@@ -27,7 +26,6 @@ treesitter.setup = function()
         },
         maintainers = {'@nvim-neorg'},
     }
-
     parser_configs.norg_table = {
         install_info = {
             url = 'https://github.com/nvim-neorg/tree-sitter-norg-table',
@@ -58,8 +56,27 @@ treesitter.setup = function()
             max_file_lines = 2048,
         },
     }
+
 end
 
 
+-- Define plugin
+ts.plugin = {
+    vim.fn.stdpath('config') .. '/lua/' .. 'ts',
+    requires = {
+        {
+            'nvim-treesitter/nvim-treesitter',
+            run = ':TSUpdate',
+            requires = {
+                {'p00f/nvim-ts-rainbow', after = 'nvim-treesitter'},
+                {'JoosepAlviste/nvim-ts-context-commentstring', after = 'nvim-treesitter'},
+            },
+        },
+    },
+    after = 'comp',
+    config = setup,
+}
+
+
 -- Return module
-return treesitter
+return ts
