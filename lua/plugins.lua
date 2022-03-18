@@ -357,7 +357,7 @@ local plugins = {
     config = function()
 
       -- Configure nvim-tree
-      require('nvim-tree').setup()
+      require('nvim-tree').setup {}
 
       -- Keymaps
       vim.api.nvim_set_keymap('', '<Leader>t', '<Cmd>NvimTreeToggle<Cr>', {noremap = true})
